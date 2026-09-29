@@ -5,3 +5,5 @@ dist/
 .ruff_cache/
 .pytest_cache/
 .env
+env.txt
+.DS_Store
