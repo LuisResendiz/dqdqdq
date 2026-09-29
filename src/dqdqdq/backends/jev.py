@@ -14,7 +14,7 @@ from typing import Any
 import httpx
 from dotenv import load_dotenv
 
-from .base import Decision
+from .base import Decision, ScoreDecision
 
 DEFAULT_URL = "https://api.typesafe.ai/v1/systemone"
 MAX_CHOICES = 255
@@ -47,10 +47,29 @@ class JevBackend:
                 "q": {"type": "choice", "instructions": instructions, "criteria": dict(choices)}
             },
         }
+        return _parse(self._post(body), choices)
+
+    def score(self, text: str, levels: Sequence[str], instructions: str = "") -> ScoreDecision:
+        if not 2 <= len(levels) <= 10:
+            raise ValueError(f"Jev scores need 2-10 levels, got {len(levels)}")
+        body = {
+            "model": self.model,
+            "state": text,
+            "questions": {
+                "q": {"type": "score", "instructions": instructions, "criteria": list(levels)}
+            },
+        }
+        a = self._post(body)["answers"]["q"]
+        probs = {int(k): float(v) for k, v in a.get("probabilities", {}).items()}
+        expected = sum(k * v for k, v in probs.items()) / (sum(probs.values()) or 1.0)
+        return ScoreDecision(int(a["score"]), expected, float(a["confidence"]), probs or None)
+
+    def _post(self, body: dict[str, Any]) -> dict[str, Any]:
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
         resp = self._client.post(self.url, json=body, headers=headers)
         resp.raise_for_status()
-        return _parse(resp.json(), choices)
+        out: dict[str, Any] = resp.json()
+        return out
 
 
 def _parse(payload: dict[str, Any], choices: Mapping[str, str]) -> Decision:

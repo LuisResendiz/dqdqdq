@@ -1,5 +1,5 @@
-from .base import Backend, Decision
+from .base import Backend, Decision, ScoreDecision
 from .jev import JevBackend
 from .mock import MockBackend
 
-__all__ = ["Backend", "Decision", "JevBackend", "MockBackend"]
+__all__ = ["Backend", "Decision", "JevBackend", "MockBackend", "ScoreDecision"]

@@ -32,6 +32,9 @@ Distinct values are resolved once and backend calls run concurrently.
 `examples/ticket_triage.py` classifies free-text support tickets into severity and department with
 `ChoiceField` + `classify_frame`. Any closed label set works the same way.
 
+## Third example: rate my CV
+`examples/rate_my_cv.py` scores a CV against several roles with Jev's ordered `score` question and prints a ranked table with confidence. It is a self-assessment tool, not a hiring filter, and has not been validated for screening candidates.
+
 ## Pipeline
 1. Exact match on a normalized index (ISO names, translations in ~100 languages, aliases like "USA", "Holland").
 2. Fuzzy match (rapidfuzz), accepted only if clearly better than the runner-up country.
