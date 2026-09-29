@@ -35,11 +35,14 @@ r.needs_review                            # True if any field is under its thres
 | Add-on | What it does |
 |---|---|
 | `contrib.countries` (`pip install dqdqdq[countries]`) | messy country text (other languages, typos) to ISO 3166-1 alpha-2/3. Local exact/fuzzy match first, Jev only for the rest. Field type: `Country`. CLI: `dqdqdq countries in.csv -c country -o out.csv` |
+| `contrib.currencies` (`dqdqdq[countries]`) | "US dollars", "pesos mx", "€", "Dólar estadounidense" to ISO 4217. Ambiguous symbols like `$` resolve to a best guess with low confidence so they get reviewed. Field type: `Currency` |
+| `contrib.units` | "pcs", "piezas", "kilos", "5 lbs" to canonical units (piece, kg, l, ft...), parsing a leading quantity into `detail`. No extra dependencies. Field type: `Unit` |
 | `contrib.seniority` | job title + responsibilities to a seniority level, using Jev's ordered `score` question. Field type: `Seniority` |
 
 ## Examples
 - `examples/ticket_triage.py`: severity, department and outage flag from support tickets.
 - `examples/expense_classifier.py`: receipt + bank transaction to category, business flag and a "same purchase?" reconciliation check.
+- `examples/order_lines.py`: messy currency and unit columns of purchase-order lines.
 - `examples/streamlit_app.py`: country cleaner UI with CSV upload.
 
 ## Develop

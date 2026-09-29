@@ -48,6 +48,18 @@ class Fuzzy:
     resolver: Resolver | None = None  # custom resolution instead of choose()
 
 
+def _merge(metadata: Sequence[Any]) -> Fuzzy:
+    """Combine every Fuzzy on a field; later ones override, so ``Annotated[Country, Fuzzy(source=..)]`` works."""
+    out = Fuzzy()
+    for m in metadata:
+        if isinstance(m, Fuzzy):
+            for f in ("instructions", "threshold", "source", "resolver"):
+                if getattr(m, f) not in (None, ""):
+                    setattr(out, f, getattr(m, f))
+            out.descriptions = {**out.descriptions, **m.descriptions}
+    return out
+
+
 def _choices(annotation: Any, meta: Fuzzy) -> tuple[dict[str, str], Callable[[str], Any]] | None:
     if get_origin(annotation) is Literal:
         vals = [str(v) for v in get_args(annotation)]
@@ -123,7 +135,7 @@ class FuzzyModel(BaseModel):
     ) -> ParseResult[Self]:
         results: dict[str, FieldResult] = {}
         for name, info in cls.model_fields.items():
-            meta = next((m for m in info.metadata if isinstance(m, Fuzzy)), Fuzzy())
+            meta = _merge(info.metadata)
             r = _resolve(info, meta, _render(text, meta.source), backend, threshold)
             if r is not None:
                 results[name] = r
