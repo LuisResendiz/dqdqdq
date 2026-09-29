@@ -6,7 +6,8 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
-from dqdqdq import JevBackend, resolve_country
+from dqdqdq import JevBackend
+from dqdqdq.contrib.countries import resolve_country
 
 load_dotenv()  # must run before reading the env var below
 

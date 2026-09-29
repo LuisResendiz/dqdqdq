@@ -64,6 +64,20 @@ class JevBackend:
         expected = sum(k * v for k, v in probs.items()) / (sum(probs.values()) or 1.0)
         return ScoreDecision(int(a["score"]), expected, float(a["confidence"]), probs or None)
 
+    def probability(self, text: str, statement: str) -> float:
+        body = {
+            "model": self.model,
+            "state": text,
+            "questions": {
+                "q": {
+                    "type": "noul",
+                    "instructions": statement,
+                    "criteria": {"true": "The statement is true", "false": "The statement is false"},
+                }
+            },
+        }
+        return float(self._post(body)["answers"]["q"]["noul"])
+
     def _post(self, body: dict[str, Any]) -> dict[str, Any]:
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
         resp = self._client.post(self.url, json=body, headers=headers)

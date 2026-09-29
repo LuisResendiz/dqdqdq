@@ -1,54 +1,56 @@
 # dqdqdq
 
-Fuzzy data-quality checks that return **typed values with a confidence score** and flag
-what needs human review. Cheap local matching first; a fast decision model
-([Jev](https://typesafe.ai)) only for the values local rules can't settle.
-
-First use case: messy country values (other languages, typos, abbreviations) → ISO 3166-1
-alpha-2 and alpha-3 codes.
+Fuzzy data-quality checks that return **typed values with a confidence score** and flag what
+needs human review. Declare a Pydantic-style schema, pass in messy text, and let a fast
+decision model ([Jev](https://typesafe.ai)) choose among the allowed values.
 
 ```python
-from dqdqdq import resolve_country, JevBackend
+from enum import Enum
+from typing import Annotated, Literal
+from dqdqdq import Fuzzy, FuzzyModel, JevBackend
 
-resolve_country("Alemania")        # DE / DEU, source="exact", confidence 1.0
-resolve_country("Untied States")   # US / USA, source="fuzzy"
-resolve_country("la tierra del sol naciente", backend=JevBackend())  # JP / JPN, source="backend"
+class Department(str, Enum):
+    billing = "billing"
+    technical = "technical"
+
+class Ticket(FuzzyModel):
+    severity: Annotated[Literal["low", "medium", "high"], Fuzzy("How severe?", threshold=0.9)]
+    department: Department
+    is_outage: Annotated[bool, Fuzzy("The ticket reports a service outage")]
+
+r = Ticket.parse("Site is down for all EU customers", backend=JevBackend())
+r.severity.value, r.severity.confidence   # "high", 0.97
+r.value.department                        # Department.technical (validated by Pydantic)
+r.needs_review                            # True if any field is under its threshold
 ```
 
-Each result is a `CountryMatch` with `alpha_2`, `alpha_3`, `name`, `confidence`, `source`
-and `needs_review` (true when unresolved or below `threshold`, default 0.85).
+- `Literal` / `Enum` fields become a Jev *choice* question, `bool` a yes/no probability.
+- Exact label matches skip the model call. No backend means unresolved values are flagged.
+- Input can be text or a mapping (`{"receipt": ..., "transaction": ...}`); `Fuzzy(source="key")` reads one key.
+- `Ticket.parse_many(rows)` dedupes and runs calls concurrently. `Ticket.parse_frame(df, column="text")`
+  (or `columns=[...]`) adds value, `_confidence` and `needs_review` columns to a DataFrame.
+- Custom types plug in through `Fuzzy(resolver=...)`.
 
-## pandas and CLI
-```python
-from dqdqdq import clean_countries, JevBackend
-df = clean_countries(df, "country", backend=JevBackend())   # adds alpha_2, alpha_3, confidence, needs_review...
-```
-```bash
-uv run dqdqdq countries in.csv --column country -o out.csv   # add --no-jev for local only
-```
-Distinct values are resolved once and backend calls run concurrently.
+## Add-ons (`dqdqdq.contrib`)
+| Add-on | What it does |
+|---|---|
+| `contrib.countries` (`pip install dqdqdq[countries]`) | messy country text (other languages, typos) to ISO 3166-1 alpha-2/3. Local exact/fuzzy match first, Jev only for the rest. Field type: `Country`. CLI: `dqdqdq countries in.csv -c country -o out.csv` |
+| `contrib.seniority` | job title + responsibilities to a seniority level, using Jev's ordered `score` question. Field type: `Seniority` |
 
-## Second example: ticket triage
-`examples/ticket_triage.py` classifies free-text support tickets into severity and department with
-`ChoiceField` + `classify_frame`. Any closed label set works the same way.
-
-## Third example: rate my CV
-`examples/rate_my_cv.py` scores a CV against several roles with Jev's ordered `score` question and prints a ranked table with confidence. It is a self-assessment tool, not a hiring filter, and has not been validated for screening candidates.
-
-## Pipeline
-1. Exact match on a normalized index (ISO names, translations in ~100 languages, aliases like "USA", "Holland").
-2. Fuzzy match (rapidfuzz), accepted only if clearly better than the runner-up country.
-3. Optional backend: one Jev `choice` question over all 249 countries (Jev's limit is 255).
+## Examples
+- `examples/ticket_triage.py`: severity, department and outage flag from support tickets.
+- `examples/expense_classifier.py`: receipt + bank transaction to category, business flag and a "same purchase?" reconciliation check.
+- `examples/streamlit_app.py`: country cleaner UI with CSV upload.
 
 ## Develop
 ```bash
 uv sync --extra app
 uv run pytest
-uv run --extra app streamlit run examples/streamlit_app.py
 ```
-Tests use a mock backend; no network or key needed. For Jev, copy `.env.example` to `.env` (gitignored) and set `TYPESAFE_API_KEY`.
+Tests use a mock backend; no network or key needed. For Jev, put `TYPESAFE_API_KEY=...` in a
+gitignored `.env` file (see `.env.example`).
 
 ## Status
-Early. Jev is in early access and its public docs list two base URLs; `JevBackend(url=...)`
-is configurable and untested against the live API. Roadmap: `FuzzyModel` schemas, batch/async,
-pandas/Polars helpers, caching, LLM and local backends. See `dq-fuzzy-schema-spec.md`.
+Early. Jev is in early access; `JevBackend(url=...)` is configurable. Roadmap: Polars helper,
+`on_low_confidence` hooks, caching, LLM and local backends, benchmarks. Not validated for
+decisions about people (hiring, credit, etc.).

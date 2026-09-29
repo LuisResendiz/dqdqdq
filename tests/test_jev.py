@@ -1,6 +1,7 @@
 import httpx
 
-from dqdqdq import JevBackend, resolve_country
+from dqdqdq import JevBackend
+from dqdqdq.contrib.countries import resolve_country
 
 
 def test_jev_request_and_parse() -> None:

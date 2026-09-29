@@ -21,8 +21,8 @@ def main(argv: list[str] | None = None) -> int:
 
     import pandas as pd
 
-    from .backends import JevBackend
-    from .frame import clean_countries
+    from ..backends import JevBackend
+    from .countries import clean_countries
 
     load_dotenv()
     df = pd.read_csv(args.input)

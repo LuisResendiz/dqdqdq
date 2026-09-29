@@ -1,6 +1,7 @@
 import pytest
 
-from dqdqdq import MockBackend, resolve_country
+from dqdqdq import MockBackend
+from dqdqdq.contrib.countries import resolve_country
 
 
 @pytest.mark.parametrize(

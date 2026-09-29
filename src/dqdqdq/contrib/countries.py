@@ -11,18 +11,21 @@ from __future__ import annotations
 
 import gettext
 import os
-import re
-import unicodedata
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 
 import pycountry
 from rapidfuzz import fuzz, process
 
-from .backends import Backend
+from ..backends import Backend
+from ..model import FieldResult, Fuzzy
+from ..text import normalize
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 Source = Literal["exact", "fuzzy", "backend", "none"]
 
@@ -49,12 +52,6 @@ class CountryMatch:
     confidence: float
     source: Source
     needs_review: bool
-
-
-def normalize(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text)
-    text = "".join(c for c in text if not unicodedata.combining(c)).casefold()
-    return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", text)).strip()
 
 
 @lru_cache(maxsize=1)
@@ -144,3 +141,35 @@ def resolve_countries(
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         done = dict(zip(unique, pool.map(lambda v: resolve_country(v, backend, threshold), unique)))
     return [done[v] for v in values]
+
+
+def country_resolver(
+    text: str, backend: Backend | None, threshold: float, instructions: str
+) -> FieldResult:
+    m = resolve_country(text, backend, threshold)
+    return FieldResult(m.alpha_2, m.confidence, m.source, m.needs_review, detail=m)
+
+
+Country = Annotated[str, Fuzzy(resolver=country_resolver)]
+"""Field type for a ``FuzzyModel``: value is the ISO alpha-2 code, ``detail`` the CountryMatch."""
+
+
+def clean_countries(
+    df: pd.DataFrame, column: str, backend: Backend | None = None, threshold: float = 0.85
+) -> pd.DataFrame:
+    """Return a copy of ``df`` with alpha_2, alpha_3, country_name, confidence, source, needs_review."""
+    import pandas as pd
+
+    res = resolve_countries(df[column].fillna("").astype(str), backend, threshold)
+    out = pd.DataFrame(
+        {
+            "alpha_2": [r.alpha_2 for r in res],
+            "alpha_3": [r.alpha_3 for r in res],
+            "country_name": [r.name for r in res],
+            "confidence": [r.confidence for r in res],
+            "source": [r.source for r in res],
+            "needs_review": [r.needs_review for r in res],
+        },
+        index=df.index,
+    )
+    return pd.concat([df, out], axis=1)

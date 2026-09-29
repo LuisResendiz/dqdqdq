@@ -32,3 +32,7 @@ class Backend(Protocol):
     def score(self, text: str, levels: Sequence[str], instructions: str = "") -> ScoreDecision:
         """Rate ``text`` against ordered ``levels`` (lowest first, 2-10 levels)."""
         ...
+
+    def probability(self, text: str, statement: str) -> float:
+        """Probability (0-1) that ``statement`` is true of ``text``."""
+        ...

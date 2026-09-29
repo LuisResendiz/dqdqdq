@@ -1,5 +1,0 @@
-Alex Rivera. Data engineer, 4 years.
-- Built and maintained Airflow pipelines moving 2 TB/day from Kafka into Snowflake; cut nightly batch time from 6h to 90min.
-- Wrote dbt models and data-quality tests (Great Expectations) used by 12 analysts.
-- Python, SQL, Spark, AWS (S3, Lambda, Glue), Terraform. Some experience with scikit-learn for churn prediction.
-- BSc Computer Science. Occasional dashboards in Tableau. No formal people-management experience.
