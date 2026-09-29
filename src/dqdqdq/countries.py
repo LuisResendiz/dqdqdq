@@ -13,6 +13,8 @@ import gettext
 import os
 import re
 import unicodedata
+from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Literal
@@ -128,3 +130,17 @@ def resolve_country(
         )
         return _build(text, d.choice, d.confidence, "backend", threshold)
     return _build(text, None, 0.0, "none", threshold)
+
+
+def resolve_countries(
+    values: Iterable[str],
+    backend: Backend | None = None,
+    threshold: float = 0.85,
+    max_workers: int = 8,
+) -> list[CountryMatch]:
+    """Batch version: each distinct value is resolved once, backend calls run concurrently."""
+    values = list(values)
+    unique = list(dict.fromkeys(values))
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        done = dict(zip(unique, pool.map(lambda v: resolve_country(v, backend, threshold), unique)))
+    return [done[v] for v in values]

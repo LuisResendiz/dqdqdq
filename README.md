@@ -18,6 +18,20 @@ resolve_country("la tierra del sol naciente", backend=JevBackend())  # JP / JPN,
 Each result is a `CountryMatch` with `alpha_2`, `alpha_3`, `name`, `confidence`, `source`
 and `needs_review` (true when unresolved or below `threshold`, default 0.85).
 
+## pandas and CLI
+```python
+from dqdqdq import clean_countries, JevBackend
+df = clean_countries(df, "country", backend=JevBackend())   # adds alpha_2, alpha_3, confidence, needs_review...
+```
+```bash
+uv run dqdqdq countries in.csv --column country -o out.csv   # add --no-jev for local only
+```
+Distinct values are resolved once and backend calls run concurrently.
+
+## Second example: ticket triage
+`examples/ticket_triage.py` classifies free-text support tickets into severity and department with
+`ChoiceField` + `classify_frame`. Any closed label set works the same way.
+
 ## Pipeline
 1. Exact match on a normalized index (ISO names, translations in ~100 languages, aliases like "USA", "Holland").
 2. Fuzzy match (rapidfuzz), accepted only if clearly better than the runner-up country.

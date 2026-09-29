@@ -14,7 +14,11 @@ dependencies = [
     "rapidfuzz>=3.9",
 ]
 
+[project.scripts]
+dqdqdq = "dqdqdq.cli:main"
+
 [project.optional-dependencies]
+pandas = ["pandas>=2.0"]
 app = ["streamlit>=1.38", "pandas>=2.0"]
 
 [dependency-groups]
@@ -32,3 +36,7 @@ testpaths = ["tests"]
 
 [tool.mypy]
 strict = true
+
+[[tool.mypy.overrides]]
+module = ["pandas", "pandas.*"]
+ignore_missing_imports = true
