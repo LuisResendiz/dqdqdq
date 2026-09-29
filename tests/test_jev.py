@@ -1,6 +1,6 @@
 import httpx
 
-from fuzzschema import JevBackend, resolve_country
+from dqdqdq import JevBackend, resolve_country
 
 
 def test_jev_request_and_parse() -> None:

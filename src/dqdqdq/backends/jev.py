@@ -12,6 +12,7 @@ from collections.abc import Mapping
 from typing import Any
 
 import httpx
+from dotenv import load_dotenv
 
 from .base import Decision
 
@@ -28,6 +29,7 @@ class JevBackend:
         timeout: float = 5.0,
         client: httpx.Client | None = None,
     ) -> None:
+        load_dotenv()
         self.api_key = api_key or os.environ.get("TYPESAFE_API_KEY") or os.environ.get("JEV_API_KEY")
         if not self.api_key and client is None:
             raise ValueError("Set TYPESAFE_API_KEY (or JEV_API_KEY) or pass api_key=")

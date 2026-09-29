@@ -1,5 +1,5 @@
 [project]
-name = "fuzzschema"
+name = "dqdqdq"
 version = "0.1.0"
 description = "Fuzzy data-quality checks with typed values and confidence scores, powered by fast decision models such as Jev."
 readme = "README.md"
@@ -8,6 +8,7 @@ authors = [{ name = "Luis Resendiz" }]
 requires-python = ">=3.10"
 keywords = ["data-quality", "fuzzy-matching", "iso-3166", "jev", "llm"]
 dependencies = [
+    "python-dotenv>=1.0",
     "httpx>=0.27",
     "pycountry>=24.6.1",
     "rapidfuzz>=3.9",

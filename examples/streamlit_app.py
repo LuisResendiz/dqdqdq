@@ -5,9 +5,9 @@ import os
 import pandas as pd
 import streamlit as st
 
-from fuzzschema import JevBackend, resolve_country
+from dqdqdq import JevBackend, resolve_country
 
-st.title("fuzzschema: country cleaner")
+st.title("dqdqdq: country cleaner")
 key = st.sidebar.text_input("Jev API key (optional)", type="password",
                             value=os.environ.get("TYPESAFE_API_KEY", ""))
 threshold = st.sidebar.slider("Review threshold", 0.0, 1.0, 0.85)

@@ -15,7 +15,7 @@ Tools such as Instructor and Pydantic AI already coerce LLM output into schemas.
 ## Proposed API (sketch)
 
 ```python
-from fuzzschema import FuzzyModel, Fuzzy
+from dqdqdq import FuzzyModel, Fuzzy
 from typing import Literal
 
 class Ticket(FuzzyModel):

@@ -1,6 +1,6 @@
 import pytest
 
-from fuzzschema import MockBackend, resolve_country
+from dqdqdq import MockBackend, resolve_country
 
 
 @pytest.mark.parametrize(

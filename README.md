@@ -1,4 +1,4 @@
-# fuzzschema
+# dqdqdq
 
 Fuzzy data-quality checks that return **typed values with a confidence score** and flag
 what needs human review. Cheap local matching first; a fast decision model
@@ -8,7 +8,7 @@ First use case: messy country values (other languages, typos, abbreviations) →
 alpha-2 and alpha-3 codes.
 
 ```python
-from fuzzschema import resolve_country, JevBackend
+from dqdqdq import resolve_country, JevBackend
 
 resolve_country("Alemania")        # DE / DEU, source="exact", confidence 1.0
 resolve_country("Untied States")   # US / USA, source="fuzzy"
@@ -29,7 +29,7 @@ uv sync --extra app
 uv run pytest
 uv run --extra app streamlit run examples/streamlit_app.py
 ```
-Tests use a mock backend; no network or key needed. For Jev, set `TYPESAFE_API_KEY`.
+Tests use a mock backend; no network or key needed. For Jev, copy `.env.example` to `.env` (gitignored) and set `TYPESAFE_API_KEY`.
 
 ## Status
 Early. Jev is in early access and its public docs list two base URLs; `JevBackend(url=...)`
