@@ -54,6 +54,8 @@ Tests use a mock backend; no network or key needed. For Jev, put `TYPESAFE_API_K
 gitignored `.env` file (see `.env.example`).
 
 ## Status
+See [ROADMAP.md](ROADMAP.md) for what is left to do.
+
 Early. Jev is in early access; `JevBackend(url=...)` is configurable. Roadmap: Polars helper,
 `on_low_confidence` hooks, caching, LLM and local backends, benchmarks. Not validated for
 decisions about people (hiring, credit, etc.).
