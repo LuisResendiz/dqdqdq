@@ -1,4 +1,4 @@
-"""dqdqdq countries in.csv --column country -o out.csv [--jev]"""
+"""okayish countries in.csv --column country -o out.csv [--jev]"""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="dqdqdq")
+    p = argparse.ArgumentParser(prog="okayish")
     sub = p.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("countries", help="resolve messy country names to ISO codes")
     c.add_argument("input", help="input CSV")

@@ -3,9 +3,9 @@ from typing import Annotated, Literal
 
 import pandas as pd
 
-from dqdqdq import Fuzzy, FuzzyModel, MockBackend
-from dqdqdq.contrib.countries import Country
-from dqdqdq.contrib.seniority import Seniority
+from okayish import Fuzzy, FuzzyModel, MockBackend
+from okayish.contrib.countries import Country
+from okayish.contrib.seniority import Seniority
 
 
 class Dept(str, Enum):

@@ -9,7 +9,7 @@ from typing import Annotated
 import pandas as pd
 from dotenv import load_dotenv
 
-from dqdqdq import Fuzzy, FuzzyModel, JevBackend
+from okayish import Fuzzy, FuzzyModel, JevBackend
 
 load_dotenv()
 

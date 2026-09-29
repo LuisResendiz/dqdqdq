@@ -1,7 +1,7 @@
 import pytest
 
-from dqdqdq import MockBackend
-from dqdqdq.contrib.countries import resolve_country
+from okayish import MockBackend
+from okayish.contrib.countries import resolve_country
 
 
 @pytest.mark.parametrize(

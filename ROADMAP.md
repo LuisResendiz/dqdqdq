@@ -4,7 +4,7 @@ Status: working prototype. Core `FuzzyModel`, Jev + mock backends, add-ons for c
 currencies, units and seniority, pandas helper, CLI, Streamlit demo.
 
 ## Before a first release
-- [ ] **Pick the final name** (currently `dqdqdq`), then rename the package, repo and PyPI project.
+- [x] Name picked: `okayish` (revisit before the first PyPI release: check overlap with `decido`, `jod`, `zod-jev`).
 - [ ] Benchmark table: accuracy, latency, cost and share of rows resolved locally, per add-on
       and per backend, on a labelled messy dataset.
 - [ ] Publish to PyPI (trusted publishing from GitHub Actions) and tag `v0.1.0`.

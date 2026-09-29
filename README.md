@@ -1,4 +1,4 @@
-# dqdqdq
+# okayish
 
 Fuzzy data-quality checks that return **typed values with a confidence score** and flag what
 needs human review. Declare a Pydantic-style schema, pass in messy text, and let a fast
@@ -7,7 +7,7 @@ decision model ([Jev](https://typesafe.ai)) choose among the allowed values.
 ```python
 from enum import Enum
 from typing import Annotated, Literal
-from dqdqdq import Fuzzy, FuzzyModel, JevBackend
+from okayish import Fuzzy, FuzzyModel, JevBackend
 
 class Department(str, Enum):
     billing = "billing"
@@ -31,11 +31,11 @@ r.needs_review                            # True if any field is under its thres
   (or `columns=[...]`) adds value, `_confidence` and `needs_review` columns to a DataFrame.
 - Custom types plug in through `Fuzzy(resolver=...)`.
 
-## Add-ons (`dqdqdq.contrib`)
+## Add-ons (`okayish.contrib`)
 | Add-on | What it does |
 |---|---|
-| `contrib.countries` (`pip install dqdqdq[countries]`) | messy country text (other languages, typos) to ISO 3166-1 alpha-2/3. Local exact/fuzzy match first, Jev only for the rest. Field type: `Country`. CLI: `dqdqdq countries in.csv -c country -o out.csv` |
-| `contrib.currencies` (`dqdqdq[countries]`) | "US dollars", "pesos mx", "€", "Dólar estadounidense" to ISO 4217. Ambiguous symbols like `$` resolve to a best guess with low confidence so they get reviewed. Field type: `Currency` |
+| `contrib.countries` (`pip install okayish[countries]`) | messy country text (other languages, typos) to ISO 3166-1 alpha-2/3. Local exact/fuzzy match first, Jev only for the rest. Field type: `Country`. CLI: `okayish countries in.csv -c country -o out.csv` |
+| `contrib.currencies` (`okayish[countries]`) | "US dollars", "pesos mx", "€", "Dólar estadounidense" to ISO 4217. Ambiguous symbols like `$` resolve to a best guess with low confidence so they get reviewed. Field type: `Currency` |
 | `contrib.units` | "pcs", "piezas", "kilos", "5 lbs" to canonical units (piece, kg, l, ft...), parsing a leading quantity into `detail`. No extra dependencies. Field type: `Unit` |
 | `contrib.seniority` | job title + responsibilities to a seniority level, using Jev's ordered `score` question. Field type: `Seniority` |
 

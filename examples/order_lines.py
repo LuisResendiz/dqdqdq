@@ -8,9 +8,9 @@ from typing import Annotated
 import pandas as pd
 from dotenv import load_dotenv
 
-from dqdqdq import Fuzzy, FuzzyModel, JevBackend
-from dqdqdq.contrib.currencies import Currency
-from dqdqdq.contrib.units import Unit
+from okayish import Fuzzy, FuzzyModel, JevBackend
+from okayish.contrib.currencies import Currency
+from okayish.contrib.units import Unit
 
 load_dotenv()
 

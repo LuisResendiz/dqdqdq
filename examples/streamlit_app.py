@@ -8,13 +8,13 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
-from dqdqdq import Fuzzy, FuzzyModel, JevBackend
-from dqdqdq.contrib.countries import resolve_country
-from dqdqdq.contrib.currencies import resolve_currency
-from dqdqdq.contrib.units import normalize_unit
+from okayish import Fuzzy, FuzzyModel, JevBackend
+from okayish.contrib.countries import resolve_country
+from okayish.contrib.currencies import resolve_currency
+from okayish.contrib.units import normalize_unit
 
 load_dotenv()  # must run before reading the env var below
-st.set_page_config(page_title="dqdqdq", page_icon="🧹", layout="wide")
+st.set_page_config(page_title="okayish", page_icon="🧹", layout="wide")
 
 st.markdown(
     """
@@ -31,7 +31,7 @@ st.markdown(
     button[data-baseweb="tab"] {font-size:1rem;}
     </style>
     <div class="hero">
-      <h1>🧹 dqdqdq</h1>
+      <h1>🧹 okayish</h1>
       <p>Fuzzy data quality: messy values in, typed values with a confidence score out.</p>
     </div>
     <div class="pipe">
@@ -95,7 +95,7 @@ def show(df: pd.DataFrame) -> None:
         df[cols], hide_index=True, width="stretch",
         column_config={"confidence": CONF, "needs_review": FLAG},
     )
-    st.download_button("Download CSV", df.to_csv(index=False), "dqdqdq_clean.csv", "text/csv")
+    st.download_button("Download CSV", df.to_csv(index=False), "okayish_clean.csv", "text/csv")
 
 
 def values_input(name: str, sample: str) -> list[str]:

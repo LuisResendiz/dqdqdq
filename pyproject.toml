@@ -1,5 +1,5 @@
 [project]
-name = "dqdqdq"
+name = "okayish"
 version = "0.1.0"
 description = "Fuzzy data-quality checks with typed values and confidence scores, powered by fast decision models such as Jev."
 readme = "README.md"
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-dqdqdq = "dqdqdq.contrib.cli:main"
+okayish = "okayish.contrib.cli:main"
 
 [project.optional-dependencies]
 pandas = ["pandas>=2.0"]

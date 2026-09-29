@@ -2,9 +2,9 @@ from typing import Annotated
 
 import pytest
 
-from dqdqdq import Fuzzy, FuzzyModel, MockBackend
-from dqdqdq.contrib.currencies import Currency, resolve_currency
-from dqdqdq.contrib.units import Unit, normalize_unit
+from okayish import Fuzzy, FuzzyModel, MockBackend
+from okayish.contrib.currencies import Currency, resolve_currency
+from okayish.contrib.units import Unit, normalize_unit
 
 
 @pytest.mark.parametrize(
