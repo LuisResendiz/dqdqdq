@@ -8,7 +8,7 @@ endpoint is configurable. The request/response shape follows the published
 from __future__ import annotations
 
 import os
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 import httpx
